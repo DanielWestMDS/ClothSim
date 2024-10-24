@@ -38,6 +38,8 @@ protected:
 	/// </summary>
 	void GenerateMesh();
 
+	FVector GetParticleNormal(int _xIndex, int _yIndex);
+
 	/// <summary>
 	/// Check if a quad of particles are connected and create triangles between them
 	/// </summary>
@@ -48,7 +50,13 @@ protected:
 	/// </summary>
 	void Update();
 
+	void CalculateWindVector();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void ReleaseCloth();
+
 	void Destroyed();
+
 
 	// cloth setup 
 	UPROPERTY(EditDefaultsOnly, Category = Mesh)
@@ -83,8 +91,25 @@ protected:
 	float HorizDist; // ClothWidth / NumHorizParticles
 	float VertDist; // ClothWidth / NumVertParticles
 
+	// simulation properties
+	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	int VerletIntegrationIterations = 4;
+
+	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	FVector WindVector = FVector(100.0f, 2000.0f, 100.0f);
+
+	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	FRotator WindRotation = { 0, 0, 0 };
+
+	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	float WindOscillationFrequency = 3.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	float WindOscillationFrequency2 = 2.27f;
+
 	FTimerHandle UpdateTimer;
-	float TimeStep = 0.016; // 60 fps
+	float TimeStep = 0.016f; // 60 fps
+
 
 public:	
 	// Called every frame

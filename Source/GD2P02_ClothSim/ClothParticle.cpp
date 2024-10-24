@@ -37,14 +37,20 @@ void ClothParticle::OffsetPosition(FVector _offset)
 	Position += _offset;
 }
 
+void ClothParticle::AddForce(FVector _force)
+{
+	Acceleration += _force;
+}
+
 void ClothParticle::Update(float dt)
 {
 	FVector cachePosition = Position;
-	Acceleration = { 2, 10, -100 };
+	//Acceleration = { 2, 10, -100 };
 
 	if (GetPinned())
 	{
 		Acceleration = { 0, 0, 0 };
+		return;
 	}
 
 	// stop divide by 0
@@ -54,7 +60,7 @@ void ClothParticle::Update(float dt)
 	}
 
 	Position = Position
-		+ ((Position - OldPosition) * (dt / OldDeltaTime))
+		+ ((Position - OldPosition) * ((1.0f -Damping) * (dt / OldDeltaTime)))
 		+ (Acceleration * dt * ((dt + OldDeltaTime) * 0.5f));
 	Acceleration = { 0, 0, 0 };
 
