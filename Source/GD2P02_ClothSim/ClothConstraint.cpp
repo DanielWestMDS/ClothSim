@@ -10,6 +10,7 @@ ClothConstraint::ClothConstraint(ClothParticle* _particleA, ClothParticle* _part
 	ParticleB = _particleB;
 
 	RestingDistance = FVector::Dist(ParticleA->GetPosition(), ParticleB->GetPosition());
+	RestingDistance *= 0.7f;
 }
 
 ClothConstraint::~ClothConstraint()

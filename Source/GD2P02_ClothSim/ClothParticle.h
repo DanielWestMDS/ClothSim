@@ -42,8 +42,6 @@ public:
 	/// <param name="_offset"></param>
 	void OffsetPosition(FVector _offset);
 
-	void AddForce(FVector _force);
-
 	void Update(float dt);
 
 private:
@@ -55,6 +53,4 @@ private:
 	TArray<class ClothConstraint*> Constraints;
 
 	bool m_bPinned = false;
-
-	float Damping = 0.01f;
 };

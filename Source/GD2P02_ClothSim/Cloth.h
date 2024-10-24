@@ -38,8 +38,6 @@ protected:
 	/// </summary>
 	void GenerateMesh();
 
-	FVector GetParticleNormal(int _xIndex, int _yIndex);
-
 	/// <summary>
 	/// Check if a quad of particles are connected and create triangles between them
 	/// </summary>
@@ -51,7 +49,6 @@ protected:
 	void Update();
 
 	void Destroyed();
-
 
 	// cloth setup 
 	UPROPERTY(EditDefaultsOnly, Category = Mesh)
@@ -88,9 +85,6 @@ protected:
 
 	FTimerHandle UpdateTimer;
 	float TimeStep = 0.016; // 60 fps
-
-	UPROPERTY(EditDefaultsOnly, Category = Mesh)
-	int VerletIntegrationIterations = 4;
 
 public:	
 	// Called every frame
