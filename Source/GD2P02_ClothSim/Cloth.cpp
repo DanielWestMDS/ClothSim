@@ -52,13 +52,36 @@ void ACloth::CreateParticles()
 			FVector ParticlePos = { StartPos.X + Horiz * HorizDist, StartPos.Y, StartPos.Z - Vert * VertDist };
 
 			ClothParticle* NewParticle = new ClothParticle(ParticlePos);
+			
+			int NumInteriorHooks = NumHooks - 2;
 
-			//// sets the first row every 5th particle to be pinned
-			//bool bShouldPin = Vert == 0 && Horiz == NumHorizParticles - 1 || Horiz % 6 == 0;
+			bool ShouldPin = false;
+
+			for (int i = 0; i < NumInteriorHooks; i++)
+			{
+				float Percent = 1.0f / (NumInteriorHooks + 1);
+				Percent *= i + 1;
+				Percent *= NumHorizParticles;
+				int PinnedIndex = FMath::RoundToInt(Percent);
+
+				if (PinnedIndex == Horiz)
+				{
+					ShouldPin = true;
+					break;
+				}
+			}
+
+
+			// sets the first row every 5th particle to be pinned
+			bool bPinned = Vert == 0 && (Horiz == 0 || Horiz == NumHorizParticles - 1 || ShouldPin);
+			NewParticle->SetPinned(bPinned);
+			// 
+			// 
+			//			// sets the first row every 5th particle to be pinned
+			//bool bShouldPin = Vert == 0 && Horiz % 5 == 0;
 			//NewParticle->SetPinned(bShouldPin);
-						// sets the first row every 5th particle to be pinned
-			bool bShouldPin = Vert == 0 && Horiz % 5 == 0;
-			NewParticle->SetPinned(bShouldPin);
+
+
 			ParticleRow.Add(NewParticle);
 		}
 
@@ -256,7 +279,7 @@ void ACloth::CalculateWindVector()
 	float WindStrength = FMath::Lerp(250.0f, 2000.0f, FMath::Sin(GetGameTimeSinceCreation() * WindOscillationFrequency) + 1.0f) * 0.5f;
 	float WindStrength2 = FMath::Lerp(250.0f, 2000.0f, FMath::Sin(GetGameTimeSinceCreation() * WindOscillationFrequency) + 1.0f) * 0.5f;
 
-	WindVector *= (WindStrength + WindStrength2);
+	WindVector *= (WindStrength + WindStrength2) * WindMultiplier;
 }
 
 void ACloth::ReleaseCloth()

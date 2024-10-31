@@ -102,6 +102,8 @@ protected:
 	float HorizDist; // ClothWidth / NumHorizParticles
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	float VertDist; // ClothWidth / NumVertParticles
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	int NumHooks = 6;
 
 	// simulation properties
 	UPROPERTY(EditDefaultsOnly, Category = Simulation)
@@ -118,6 +120,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Simulation)
 	float WindOscillationFrequency2 = 2.27f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Simulation)
+	float WindMultiplier = 1.0f;
 
 	FTimerHandle UpdateTimer;
 	float TimeStep = 0.016f; // 60 fps
