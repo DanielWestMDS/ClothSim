@@ -36,6 +36,8 @@ public:
 
 	FVector GetPosition() { return Position; };
 
+	void SetPosition(FVector _Position) { Position = _Position; };
+
 	/// <summary>
 	/// Changes the position of this particle by the vector offset parameter
 	/// </summary>

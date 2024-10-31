@@ -53,10 +53,12 @@ void ACloth::CreateParticles()
 
 			ClothParticle* NewParticle = new ClothParticle(ParticlePos);
 
-			// sets the first row every 5th particle to be pinned
-			bool bShouldPin = Vert == 0 && Horiz == NumHorizParticles - 1 || Horiz % 6 == 0;
+			//// sets the first row every 5th particle to be pinned
+			//bool bShouldPin = Vert == 0 && Horiz == NumHorizParticles - 1 || Horiz % 6 == 0;
+			//NewParticle->SetPinned(bShouldPin);
+						// sets the first row every 5th particle to be pinned
+			bool bShouldPin = Vert == 0 && Horiz % 5 == 0;
 			NewParticle->SetPinned(bShouldPin);
-
 			ParticleRow.Add(NewParticle);
 		}
 
@@ -262,6 +264,27 @@ void ACloth::ReleaseCloth()
 	for (int Horiz = 0; Horiz < NumHorizParticles; Horiz++)
 	{
 		Particles[0][Horiz]->SetPinned(false);
+	}
+}
+
+void ACloth::ConstrictCloth(float _constrictedAmount)
+{
+	float ConstrictedWidth = ClothWidth * _constrictedAmount;
+	float ConstrictedDist = ConstrictedWidth / (NumHorizParticles - 1);
+
+	FVector StartPos(0);
+	StartPos.X = -ClothWidth / 2;
+	StartPos.Z = ClothHeight / 2;
+
+	for (int Horiz = 0; Horiz < NumHorizParticles; Horiz++)
+	{
+		FVector ParticlePos = { StartPos.X + Horiz * ConstrictedDist, StartPos.Y, StartPos.Z };
+
+		if (Particles[0][Horiz]->GetPinned())
+		{
+			Particles[0][Horiz]->SetPosition(ParticlePos);
+		}
+
 	}
 }
 

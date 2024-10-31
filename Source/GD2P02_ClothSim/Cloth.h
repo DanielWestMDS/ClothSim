@@ -19,6 +19,15 @@ public:
 	// Sets default values for this actor's properties
 	ACloth();
 
+	//UFUNCTION(BlueprintCallable, Category = "Cloth | Functions")
+	//void ReleaseCloth();
+
+	//UFUNCTION(BlueprintCallable, Category = "Cloth | Functions")
+	//void ResetCloth();
+
+	UFUNCTION(BlueprintCallable, Category = "Cloth | Functions")
+		void ConstrictCloth(float _constrictedAmount);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -88,17 +97,20 @@ protected:
 	int NumHorizParticles = 30;
 	UPROPERTY(EditDefaultsOnly, Category = Mesh)
 	int NumVertParticles = 30;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	float HorizDist; // ClothWidth / NumHorizParticles
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	float VertDist; // ClothWidth / NumVertParticles
 
 	// simulation properties
 	UPROPERTY(EditDefaultsOnly, Category = Simulation)
 	int VerletIntegrationIterations = 4;
 
-	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Simulation)
 	FVector WindVector = FVector(100.0f, 2000.0f, 100.0f);
 
-	UPROPERTY(EditDefaultsOnly, Category = Simulation)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Simulation)
 	FRotator WindRotation = { 0, 0, 0 };
 
 	UPROPERTY(EditDefaultsOnly, Category = Simulation)
