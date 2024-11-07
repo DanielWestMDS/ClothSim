@@ -60,8 +60,9 @@ void ClothParticle::Update(float dt)
 	}
 
 	Position = Position
-		+ ((Position - OldPosition) * ((1.0f -Damping) * (dt / OldDeltaTime)))
-		+ (Acceleration * dt * ((dt + OldDeltaTime) * 0.5f));
+		+ (Position - OldPosition) * (1.0f -Damping * dt)
+		+ (Acceleration * dt);
+
 	Acceleration = { 0, 0, 0 };
 
 	OldPosition = cachePosition;

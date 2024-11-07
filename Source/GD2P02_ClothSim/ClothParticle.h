@@ -60,7 +60,7 @@ private:
 
 	bool m_bPinned = false;
 
-	float Damping = 0.0f;
+	float Damping = 0.01f;
 
 	bool m_bOnGround = false;
 };
