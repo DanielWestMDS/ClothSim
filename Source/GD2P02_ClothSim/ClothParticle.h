@@ -48,6 +48,8 @@ public:
 
 	void Update(float dt);
 
+	void CheckForGroundCollision(float _groundHeight);
+
 private:
 	FVector Position = { 0, 0, 0 };
 	FVector OldPosition = { 0, 0, 0 };
@@ -59,4 +61,6 @@ private:
 	bool m_bPinned = false;
 
 	float Damping = 0.0f;
+
+	bool m_bOnGround = false;
 };

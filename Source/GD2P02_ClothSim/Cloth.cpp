@@ -224,6 +224,14 @@ void ACloth::Destroyed()
 	Super::Destroyed();
 }
 
+void ACloth::Reset()
+{
+	Destroyed();
+
+	CreateParticles();
+	CreateConstraints();
+}
+
 void ACloth::Update()
 {
 	float iterationTimeStep = TimeStep / (float)VerletIntegrationIterations;
@@ -268,6 +276,8 @@ void ACloth::Update()
 			iter->Update(TimeStep);
 		}
 	}
+
+	CheckForCollision();
 }
 
 void ACloth::CalculateWindVector()
@@ -287,6 +297,22 @@ void ACloth::ReleaseCloth()
 	for (int Horiz = 0; Horiz < NumHorizParticles; Horiz++)
 	{
 		Particles[0][Horiz]->SetPinned(false);
+	}
+}
+
+void ACloth::CheckForCollision()
+{
+	for (int Vert = 0; Vert < NumVertParticles; Vert++)
+	{
+		for (int Horiz = 0; Horiz < NumHorizParticles; Horiz++)
+		{
+			// ground collision
+			Particles[Vert][Horiz]->CheckForGroundCollision(-ClothMesh->GetComponentLocation().Z);
+
+			// sphere collision
+
+			// capsule collision
+		}
 	}
 }
 

@@ -47,7 +47,7 @@ void ClothParticle::Update(float dt)
 	FVector cachePosition = Position;
 	//Acceleration = { 2, 10, -100 };
 
-	if (GetPinned())
+	if (GetPinned() || m_bOnGround)
 	{
 		Acceleration = { 0, 0, 0 };
 		return;
@@ -66,4 +66,13 @@ void ClothParticle::Update(float dt)
 
 	OldPosition = cachePosition;
 	OldDeltaTime = dt;
+}
+
+void ClothParticle::CheckForGroundCollision(float _groundHeight)
+{
+	if (Position.Z <= _groundHeight)
+	{
+		Position.Z = _groundHeight;
+		m_bOnGround = true;
+	}
 }

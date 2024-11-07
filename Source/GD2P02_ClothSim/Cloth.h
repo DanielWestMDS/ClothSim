@@ -28,6 +28,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Cloth | Functions")
 		void ConstrictCloth(float _constrictedAmount);
 
+
+	// reset cloth to original position
+	UFUNCTION(BlueprintCallable, Category = "Cloth | Functions")
+		void Reset();
+
+	UFUNCTION(BlueprintCallable, Category = "Cloth | Functions")
+		void ReleaseCloth();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -61,10 +68,12 @@ protected:
 
 	void CalculateWindVector();
 
-	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	void ReleaseCloth();
+	void CheckForCollision();
 
+	// clean up memory
 	void Destroyed();
+
+
 
 
 	// cloth setup 
