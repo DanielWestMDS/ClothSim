@@ -41,3 +41,13 @@ void ClothConstraint::Update(float _deltaTime)
 	// do nothing if both particles pinned
 
 }
+
+void ClothConstraint::SetInterwoven(bool _isInterwoven)
+{
+	Interwoven = _isInterwoven;
+}
+
+bool ClothConstraint::GetInterwoven()
+{
+	return Interwoven;
+}

@@ -50,6 +50,12 @@ public:
 
 	void CheckForGroundCollision(float _groundHeight);
 
+	void CheckForSphereCollision(FVector _sphereCenter, FVector _clothPosition);
+
+	void CheckForCapsuleCollision(FVector _capsuleCenter, FVector _clothPosition);
+
+	void AddBurn(float _burnAmount);
+
 private:
 	FVector Position = { 0, 0, 0 };
 	FVector OldPosition = { 0, 0, 0 };
@@ -63,4 +69,6 @@ private:
 	float Damping = 0.01f;
 
 	bool m_bOnGround = false;
+
+	float BurnAmount = 0.0f;
 };

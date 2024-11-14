@@ -5,6 +5,9 @@
 #include "KismetProceduralMeshLibrary.h"
 #include "ClothParticle.h"
 #include "ClothConstraint.h"
+#include "ClothSphere.h"
+#include "ClothCapsule.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -24,6 +27,22 @@ void ACloth::BeginPlay()
 
 	ClothMesh->SetMaterial(0, ClothMaterial);
 	
+	// find the sphere
+	TArray<AActor*> FoundSpheres;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AClothSphere::StaticClass(), FoundSpheres);
+	if (FoundSpheres.Num() > 0)
+	{
+		Sphere = Cast<AClothSphere>(FoundSpheres[0]);
+	}
+
+	// find the capsule
+	TArray<AActor*> FoundCapsules;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AClothCapsule::StaticClass(), FoundCapsules);
+	if (FoundCapsules.Num() > 0)
+	{
+		Capsule = Cast<AClothCapsule>(FoundCapsules[0]);
+	}
+
 	CreateParticles();
 	CreateConstraints();
 
@@ -108,6 +127,20 @@ void ACloth::CreateConstraints()
 			}
 
 			// check constraint is not on the very end
+			if (Vert < NumVertParticles - 2)
+			{
+				// interwoven constraint
+				ClothConstraint* NewConstraint = new ClothConstraint(Particles[Vert][Horiz], Particles[Vert + 2][Horiz]);
+				Constraints.Add(NewConstraint);
+
+				//set this as interwoven constraint with bool to toggle
+				NewConstraint->SetInterwoven(true);
+
+				Particles[Vert][Horiz]->AddConstraint(NewConstraint);
+				Particles[Vert + 2][Horiz]->AddConstraint(NewConstraint);
+			}
+
+			// check constraint is not on the very end
 			if (Horiz < NumHorizParticles - 1)
 			{
 				// make a horizontal constraint
@@ -116,6 +149,20 @@ void ACloth::CreateConstraints()
 
 				Particles[Vert][Horiz]->AddConstraint(NewConstraint);
 				Particles[Vert][Horiz + 1]->AddConstraint(NewConstraint);
+			}
+
+			
+			if (Horiz < NumHorizParticles - 2)
+			{
+				// interwoven constraint
+				ClothConstraint* NewConstraint = new ClothConstraint(Particles[Vert][Horiz], Particles[Vert][Horiz + 2]);
+				Constraints.Add(NewConstraint);
+
+				//set this as interwoven constraint with bool to toggle
+				NewConstraint->SetInterwoven(true);
+
+				Particles[Vert][Horiz]->AddConstraint(NewConstraint);
+				Particles[Vert][Horiz + 2]->AddConstraint(NewConstraint);
 			}
 		}
 
@@ -237,8 +284,8 @@ void ACloth::Update()
 	float iterationTimeStep = TimeStep / (float)VerletIntegrationIterations;
 	float divStep = 1.0f / (float)VerletIntegrationIterations;
 
-	//for (int i = 0; i < VerletIntegrationIterations; i++)
-	//{
+	for (int i = 0; i < VerletIntegrationIterations; i++)
+	{
 
 		// update all particles
 	for (int Vert = 0; Vert < Particles.Num(); Vert++)
@@ -248,7 +295,7 @@ void ACloth::Update()
 		for (int Horiz = 0; Horiz < Particles[Vert].Num(); Horiz++)
 		{
 			// apply gravity (could consider mass)
-			Particles[Vert][Horiz]->AddForce(FVector(0.0f, 0.0f, -981.0f * 1.0f * TimeStep));
+			Particles[Vert][Horiz]->AddForce(FVector(0.0f, 0.0f, -981.0f * 1.0f * iterationTimeStep));
 
 			// apply wind
 			
@@ -259,21 +306,26 @@ void ACloth::Update()
 
 			float WindAlignment = FMath::Abs(NormalWind.Dot(ParticleNormal));
 
-			Particles[Vert][Horiz]->AddForce(WindVector * WindAlignment * TimeStep);
+			Particles[Vert][Horiz]->AddForce(WindVector * WindAlignment * iterationTimeStep);
 
-			Particles[Vert][Horiz]->Update(TimeStep);
+			Particles[Vert][Horiz]->Update(iterationTimeStep);
 		}
 	}
 
 
 	//}
-
-	for (int i = 0; i < VerletIntegrationIterations; i++)
-	{
+	// iterate all the constraints second
+	//for (int i = 0; i < VerletIntegrationIterations; i++)
+	//{
 		// update all constraints
 		for (auto iter : Constraints)
 		{
-			iter->Update(TimeStep);
+			if (iter->GetInterwoven() && !SimulateInterwovenConstraints)
+			{
+				continue;
+			}
+
+			iter->Update(iterationTimeStep);
 		}
 	}
 
@@ -310,8 +362,16 @@ void ACloth::CheckForCollision()
 			Particles[Vert][Horiz]->CheckForGroundCollision(-ClothMesh->GetComponentLocation().Z);
 
 			// sphere collision
+			if (Sphere) // make sure da sphere exists
+			{
+				Particles[Vert][Horiz]->CheckForSphereCollision(Sphere->GetActorLocation(), this->GetActorLocation());
+			}
 
 			// capsule collision
+			if (Sphere) // make sure da capsule exists
+			{
+				Particles[Vert][Horiz]->CheckForCapsuleCollision(Capsule->GetActorLocation(), this->GetActorLocation());
+			}
 		}
 	}
 }

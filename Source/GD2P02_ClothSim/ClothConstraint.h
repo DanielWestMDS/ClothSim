@@ -28,6 +28,14 @@ public:
 	/// <param name="_deltaTime"></param>
 	void Update(float _deltaTime);
 
+	/// <summary>
+	/// sets this constraint as interwoven - not interwoven by default
+	/// </summary>
+	/// <param name="_isInterwoven"></param>
+	void SetInterwoven(bool _isInterwoven);
+
+	bool GetInterwoven();
+
 private:
 
 	ClothParticle* ParticleA = nullptr;
@@ -35,5 +43,6 @@ private:
 
 	float RestingDistance;
 
+	bool Interwoven = false;
 
 };

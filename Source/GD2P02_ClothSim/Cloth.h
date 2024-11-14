@@ -97,9 +97,9 @@ protected:
 	TArray<class ClothConstraint*> Constraints;
 
 	// Cloth properties
-	UPROPERTY(EditDefaultsOnly, Category = Mesh)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	float ClothWidth = 200.0f; // in Centimeters
-	UPROPERTY(EditDefaultsOnly, Category = Mesh)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	float ClothHeight = 200.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Mesh)
@@ -130,10 +130,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Simulation)
 	float WindOscillationFrequency2 = 2.27f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Simulation)
-	float WindMultiplier = 1.0f;
+	float WindMultiplier = 0.5f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Simulation)
+	bool SimulateInterwovenConstraints = true;
 
 	FTimerHandle UpdateTimer;
 	float TimeStep = 0.016f; // 60 fps
+
+	UPROPERTY()
+	class AClothSphere* Sphere = nullptr;
+
+	UPROPERTY()
+	class AClothCapsule* Capsule = nullptr;
 
 
 public:	
